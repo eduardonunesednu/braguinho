@@ -1,18 +1,38 @@
-# 🏰 Braguinho - O teu Amigo de Bragança
+# Braguinho
 
-O **Braguinho** é um assistente virtual inteligente desenhado para ajudar as crianças a explorar a cidade de Bragança de forma divertida e educativa.
+Bem-vindo ao **Braguinho**, uma aplicação interativa para crianças descobrirem Bragança!
 
-## 🚀 Estrutura do Projeto
+## Estrutura do Projeto
 
 O projeto está dividido em duas partes principais:
-* **Backend (`/backend`):** Construído com **FastAPI** (Python). É aqui que reside a inteligência e as regras de negócio.
-* **Frontend (`/frontend`):** Interface moderna construída em **React** com **Tailwind CSS**, focada na experiência do utilizador infantil.
 
-## 🛠️ Como Utilizar
+- **Backend**: API desenvolvida em Python com FastAPI.
+- **Frontend**: Aplicação web desenvolvida em React com Vite e Tailwind CSS.
 
-### 1. Preparar o Backend
-Navega até à pasta do backend e instala as dependências:
-```bash
-cd backend
-pip install -r requirements.txt
-uvicorn main:app --reload
+## Como Iniciar
+
+### Backend (FastAPI)
+
+1. Navegue até a pasta `backend`:
+   ```bash
+   cd backend
+   ```
+2. (Instruções de configuração do ambiente virtual e execução serão adicionadas aqui após a criação do backend)
+
+### Frontend (React)
+
+1. Navegue até a pasta `frontend`:
+   ```bash
+   cd frontend
+   ```
+2. Instale as dependências:
+   ```bash
+   npm install
+   ```
+3. Inicie o servidor de desenvolvimento:
+   ```bash
+   npm run dev
+   ```
+
+## Sobre
+Desenvolvido para ajudar crianças de 6 a 10 anos a explorar a cidade de forma divertida.
