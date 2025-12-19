@@ -1,7 +1,17 @@
 import React from 'react';
-import mascote from './assets/mascote_braguinho.png';
+import mascote from './assets/mascote_braguinho.jpg';
 
 function App() {
+  const [isSpeaking, setIsSpeaking] = React.useState(false);
+
+  // Simular o mascote a falar periodicamente
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      setIsSpeaking(true);
+      setTimeout(() => setIsSpeaking(false), 2000); // Fala por 2 segundos
+    }, 5000); // A cada 5 segundos
+    return () => clearInterval(interval);
+  }, []);
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gradient-to-b from-blue-100 to-green-50">
 
@@ -17,7 +27,7 @@ function App() {
             <img
               src={mascote}
               alt="Mascote Braguinho"
-              className="relative w-48 h-48 md:w-64 md:h-64 object-contain drop-shadow-xl hover:scale-105 transition-transform duration-300"
+              className={`relative w-48 h-48 md:w-64 md:h-64 object-contain drop-shadow-xl hover:scale-105 transition-transform duration-300 ${isSpeaking ? 'animate-speak' : 'animate-float'}`}
             />
           </div>
 
