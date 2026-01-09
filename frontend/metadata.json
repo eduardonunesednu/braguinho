@@ -1,0 +1,7 @@
+{
+  "name": "O Briguinho de Bragança",
+  "description": "Um assistente virtual amigável para as crianças de Bragança, Portugal, ajudando-as a descobrir a história e os encantos da sua cidade.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
