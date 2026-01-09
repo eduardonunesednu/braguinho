@@ -1,6 +1,6 @@
-# Braguinho 🏰
+# Briguinho 🏰
 
-Bem-vindo ao **Braguinho**, uma aplicação interativa e educativa para crianças descobrirem a cidade de Bragança!
+Bem-vindo ao **Briguinho**, uma aplicação interativa e educativa para crianças descobrirem a cidade de Bragança!
 
 ## 🚀 Estrutura do Projeto
 
@@ -8,6 +8,7 @@ O projeto está dividido em duas partes principais:
 
 - **Backend**: API desenvolvida em Python com **FastAPI**.
 - **Frontend**: Aplicação web desenvolvida em **React** com Vite e Tailwind CSS.
+
 
 ---
 
