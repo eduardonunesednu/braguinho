@@ -8,10 +8,11 @@ O teu objetivo é ser um companheiro educativo e divertido para crianças entre 
 
 Regras de Interação:
 1. Responde SEMPRE em Português de Portugal (PT-PT). Usa termos como "miúdos", "fixe", "uau", "espetacular".
-2. Sê extremamente carinhoso, usa expressões como "meu pequeno amigo" ou "amiguinho".
+2. Sê simpático e engraçado, como um menino explorador.
 3. Fala sobre a história de Bragança (o Castelo, a Cidadela, a Domus Municipalis), as lendas e a natureza de Montesinho.
-4. Mantém as respostas curtas, alegres e cheias de emojis (🏰, ✨, 🌟, 🍬, 🌲).
-5. Nunca uses termos técnicos complexos sem os explicar de forma simples.
+4. MUITO IMPORTANTE: Dá respostas CURTAS e simples (máximo 2 frases). As crianças perdem a atenção se falares muito.
+5. Usa emojis pontuais (🏰, ✨, ).
+6. Nunca uses termos técnicos.
 `;
 
 export function decodeBase64(base64: string) {
@@ -48,35 +49,40 @@ export class BriguinhoService {
   private chat: any;
 
   constructor() {
-    this.ai = new GoogleGenAI({ apiKey: process.env.API_KEY || '' });
+    this.ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_API_KEY || '' });
     this.chat = this.ai.chats.create({
-      model: 'gemini-3-flash-preview',
+      model: 'gemini-2.0-flash-exp',
       config: {
         systemInstruction: SYSTEM_INSTRUCTION,
-        temperature: 0.8,
+        temperature: 0.7,
       },
     });
   }
 
   async sendMessage(message: string): Promise<string> {
-    const response: GenerateContentResponse = await this.chat.sendMessage({ message });
-    return response.text || "Ups! O meu castelo tremeu um bocadinho. Podes repetir, por favor?";
+    try {
+      const response: GenerateContentResponse = await this.chat.sendMessage({ message });
+      return response.text || "Ups! Não percebi bem. Podes repetir?";
+    } catch (error) {
+      console.error("Erro no chat:", error);
+      return "Estou a ter dificuldades em ouvir-te. Verifica a tua chave secreta (API Key)!";
+    }
   }
 
   async generateVoice(text: string): Promise<string | null> {
     try {
-      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || '' });
+      const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_API_KEY || '' });
       // Clean up text for TTS (remove some emojis for better speech flow)
       const cleanText = text.replace(/[\u1000-\uFFFF]+/g, '').slice(0, 300);
-      
+
       const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash-preview-tts",
-        contents: [{ parts: [{ text: `Diz isto com uma voz de mascote muito doce, alegre e em Português de Portugal: ${cleanText}` }] }],
+        model: "gemini-2.0-flash-exp",
+        contents: [{ parts: [{ text: `Lê isto com uma voz de menino jovem, enérgico e em Português de Portugal: ${cleanText}` }] }],
         config: {
           responseModalities: [Modality.AUDIO],
           speechConfig: {
             voiceConfig: {
-              prebuiltVoiceConfig: { voiceName: 'Kore' },
+              prebuiltVoiceConfig: { voiceName: 'Puck' },
             },
           },
         },
@@ -86,6 +92,9 @@ export class BriguinhoService {
       return base64Audio || null;
     } catch (error) {
       console.error("Erro ao gerar voz:", error);
+      if (error instanceof Error) {
+        console.error("Detalhes do erro:", error.message);
+      }
       return null;
     }
   }

@@ -34,7 +34,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ onThinkingChange, onSpeak
   const playVoiceResponse = async (text: string) => {
     initAudioContext();
     const ctx = audioContextRef.current!;
-    
+
     try {
       onSpeakingChange(true);
       const base64Audio = await briguinhoService.generateVoice(text);
@@ -45,15 +45,15 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ onThinkingChange, onSpeak
 
       const audioBytes = decodeBase64(base64Audio);
       const audioBuffer = await decodeAudioData(audioBytes, ctx, 24000, 1);
-      
+
       const source = ctx.createBufferSource();
       source.buffer = audioBuffer;
       source.connect(ctx.destination);
-      
+
       source.onended = () => {
         onSpeakingChange(false);
       };
-      
+
       source.start();
     } catch (error) {
       console.error("Erro ao reproduzir voz:", error);
@@ -96,7 +96,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ onThinkingChange, onSpeak
         timestamp: new Date(),
       };
       setMessages(prev => [...prev, modelMessage]);
-      
+
       // Start TTS automatically
       await playVoiceResponse(responseText);
     } catch (error) {
@@ -138,15 +138,31 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ onThinkingChange, onSpeak
             className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
           >
             <div
-              className={`max-w-[85%] px-5 py-3 rounded-2xl shadow-sm text-lg ${
-                msg.role === 'user'
+              className={`max-w-[85%] px-5 py-3 rounded-2xl shadow-sm text-lg ${msg.role === 'user'
                   ? 'bg-red-500 text-white rounded-br-none'
                   : 'bg-white text-gray-800 border-2 border-yellow-200 rounded-bl-none'
-              }`}
+                }`}
             >
               {msg.text}
-              <div className={`text-[10px] mt-1 opacity-60 ${msg.role === 'user' ? 'text-right' : 'text-left'}`}>
-                {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+              <div className={`flex items-center mt-2 opacity-60 ${msg.role === 'user' ? 'justify-end' : 'justify-between'}`}>
+                {msg.role === 'model' && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      playVoiceResponse(msg.text);
+                    }}
+                    disabled={isSpeaking}
+                    className={`p-1 rounded-full hover:bg-yellow-200 transition-colors ${isSpeaking ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+                    title="Ouvir mensagem"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-yellow-800" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                    </svg>
+                  </button>
+                )}
+                <span className="text-[10px]">
+                  {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                </span>
               </div>
             </div>
           </div>
@@ -156,16 +172,16 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ onThinkingChange, onSpeak
 
       {/* Quick Actions */}
       <div className="p-2 flex space-x-2 overflow-x-auto bg-white/40 border-t border-yellow-100 no-scrollbar">
-        <QuickButton 
-          text="🏰 Conta-me uma história" 
+        <QuickButton
+          text="🏰 Conta-me uma história"
           onClick={() => { setInput('Conta-me uma história curta sobre o Castelo de Bragança'); }}
         />
-        <QuickButton 
-          text="🍦 O que posso comer?" 
+        <QuickButton
+          text="🍦 O que posso comer?"
           onClick={() => { setInput('Quais são as comidas mais saborosas de Bragança?'); }}
         />
-        <QuickButton 
-          text="🦉 Animais do Montesinho" 
+        <QuickButton
+          text="🦉 Animais do Montesinho"
           onClick={() => { setInput('Que animais vivem no Parque Natural de Montesinho?'); }}
         />
       </div>
