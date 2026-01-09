@@ -71,25 +71,24 @@ export class BriguinhoService {
 
   async generateVoice(text: string): Promise<string | null> {
     try {
-      const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_API_KEY || '' });
       // Clean up text for TTS (remove some emojis for better speech flow)
       const cleanText = text.replace(/[\u1000-\uFFFF]+/g, '').slice(0, 300);
 
-      const response = await ai.models.generateContent({
-        model: "gemini-2.0-flash-exp",
-        contents: [{ parts: [{ text: `Lê isto com uma voz de menino jovem, enérgico e em Português de Portugal: ${cleanText}` }] }],
-        config: {
-          responseModalities: [Modality.AUDIO],
-          speechConfig: {
-            voiceConfig: {
-              prebuiltVoiceConfig: { voiceName: 'Puck' },
-            },
-          },
+      const response = await fetch('http://127.0.0.1:8000/speak', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
         },
+        body: JSON.stringify({ text: cleanText }),
       });
 
-      const base64Audio = response.candidates?.[0]?.content?.parts?.[0]?.inlineData?.data;
-      return base64Audio || null;
+      if (!response.ok) {
+        throw new Error(`Backend error: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      return data.audio || null;
+
     } catch (error) {
       console.error("Erro ao gerar voz:", error);
       if (error instanceof Error) {

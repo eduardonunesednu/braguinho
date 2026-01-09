@@ -8,3 +8,6 @@ dependencies:
   - pip:
     - fastapi
     - uvicorn[standard]
+    - google-generativeai
+    - python-dotenv
+    - pydantic
